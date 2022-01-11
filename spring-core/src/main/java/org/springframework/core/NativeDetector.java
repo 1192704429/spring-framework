@@ -28,9 +28,23 @@ package org.springframework.core;
 public abstract class NativeDetector {
 
 	// See https://github.com/oracle/graal/blob/master/sdk/src/org.graalvm.nativeimage/src/org/graalvm/nativeimage/ImageInfo.java
+	/**
+	 * 属性的信息的系统属性的名称
+	 *
+	 * 当前执行代码的上下文。如果属性返回
+	 *
+	 * 代码是在图像的上下文中执行的
+	 *
+	 * *构建(例如，在一个静态初始化的类，将包含在图像中)。如果
+	 *
+	 * *属性返回代码{@link #PROPERTY_IMAGE_CODE_VALUE_RUNTIME}给出的字符串
+	 *
+	 * *在映像运行时执行。否则不设置属性。
+	 */
 	private static final boolean imageCode = (System.getProperty("org.graalvm.nativeimage.imagecode") != null);
 
 	/**
+	 * 						如果在映像构建上下文中或映像运行时调用
 	 * Returns {@code true} if invoked in the context of image building or during image runtime, else {@code false}.
 	 */
 	public static boolean inNativeImage() {

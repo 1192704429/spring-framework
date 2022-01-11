@@ -225,7 +225,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Nullable
 	private ApplicationEventMulticaster applicationEventMulticaster;
 
-	/** Application startup metrics. **/
+	/** Application startup metrics. 应用程序启动指标 **/
 	private ApplicationStartup applicationStartup = ApplicationStartup.DEFAULT;
 
 	/** Statically specified listeners. */

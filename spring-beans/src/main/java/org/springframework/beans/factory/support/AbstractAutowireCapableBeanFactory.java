@@ -120,7 +120,7 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory
 		implements AutowireCapableBeanFactory {
 
-	/** Strategy for creating bean instances. */
+	/** Strategy for creating bean instances. 创建bean实例的策略。*/
 	private InstantiationStrategy instantiationStrategy;
 
 	/** Resolver strategy for method parameter names. */
@@ -166,14 +166,18 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 
 	/**
+	 * Capable adj. 有能力的；有本领的，能干的；可以……的，容许……的
 	 * Create a new AbstractAutowireCapableBeanFactory.
 	 */
 	public AbstractAutowireCapableBeanFactory() {
+		// 父类构造函数没有做什么事情  	public AbstractBeanFactory() {}
 		super();
+		// ignore 忽略
+		// 往 ignoredDependencyInterfaces集合（Set）中添加
 		ignoreDependencyInterface(BeanNameAware.class);
 		ignoreDependencyInterface(BeanFactoryAware.class);
 		ignoreDependencyInterface(BeanClassLoaderAware.class);
-		if (NativeDetector.inNativeImage()) {
+		if (NativeDetector.inNativeImage()) { // false
 			this.instantiationStrategy = new SimpleInstantiationStrategy();
 		}
 		else {
