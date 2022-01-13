@@ -24,6 +24,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringValueResolver;
 
 /**
+ * 解析 bean 定义属性值中的占位符的属性资源配置器的抽象基类。将属性文件或其他
+ * {@linkplain org.springframework.core.env.PropertySource property source} 中的 <em>pull<em> 值实现到 bean 定义中。
  * Abstract base class for property resource configurers that resolve placeholders
  * in bean definition property values. Implementations <em>pull</em> values from a
  * properties file or other {@linkplain org.springframework.core.env.PropertySource
