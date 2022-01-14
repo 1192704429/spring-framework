@@ -113,6 +113,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 
 
 	/**
+	 * 此实现执行此上下文的底层 bean 工厂的实际刷新，关闭先前的 bean 工厂（如果有）并为上下文生命周期的下一阶段初始化一个新的 bean 工厂。
 	 * This implementation performs an actual refresh of this context's underlying
 	 * bean factory, shutting down the previous bean factory (if any) and
 	 * initializing a fresh bean factory for the next phase of the context's lifecycle.
@@ -124,9 +125,14 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			closeBeanFactory();
 		}
 		try {
+			// 创建默认的Bean工厂
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+			// 为了序列化指定id，可以从id反序列化到beanFactory对象
 			beanFactory.setSerializationId(getId());
+			// 定制beanFactory，设置相关属性，包括是否允许同名称的不同定义的对象以及循环依赖
 			customizeBeanFactory(beanFactory);
+			// 解析xml 调用AbstractXmlApplicationContext类loadBeanDefinitions 方法
+			// 初始化documentReader，并进行xml文件读物解析，默认命名空间的解析，自定义标签的解析
 			loadBeanDefinitions(beanFactory);
 			this.beanFactory = beanFactory;
 		}
@@ -161,8 +167,10 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 		return (this.beanFactory != null);
 	}
 
+	// TODO 应该好多地方都调用到了这个方法
 	@Override
 	public final ConfigurableListableBeanFactory getBeanFactory() {
+		// 在上面解析的时候refreshBeanFactory 方法中  this.beanFactory 被赋值
 		DefaultListableBeanFactory beanFactory = this.beanFactory;
 		if (beanFactory == null) {
 			throw new IllegalStateException("BeanFactory not initialized or already closed - " +
@@ -198,6 +206,10 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	}
 
 	/**
+	 * 自定义此上下文使用的内部 bean 工厂。每次 {@link refresh()} 尝试调用。
+	 * <p>如果指定，默认实现会应用此上下文的 {@linkplain setAllowBeanDefinitionOverriding
+	 * "allowBeanDefinitionOverriding"} 和
+	 * {@linkplain setAllowCircularReferences "allowCircularReferences"} 设置。可以在子类中重写以自定义任何
 	 * Customize the internal bean factory used by this context.
 	 * Called for each {@link #refresh()} attempt.
 	 * <p>The default implementation applies this context's
@@ -212,15 +224,18 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see DefaultListableBeanFactory#setAllowEagerClassLoading
 	 */
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
-		if (this.allowBeanDefinitionOverriding != null) {
+		// 是否允许覆盖同名称的不同定义的对象
+		if (this.allowBeanDefinitionOverriding != null) { // false
 			beanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
 		}
-		if (this.allowCircularReferences != null) {
+		// 是否允许bean之间存在循环依赖
+		if (this.allowCircularReferences != null) { // false
 			beanFactory.setAllowCircularReferences(this.allowCircularReferences);
 		}
 	}
 
 	/**
+	 * 将 bean 定义加载到给定的 bean 工厂，通常通过委托给一个或多个 bean 定义读取器。
 	 * Load bean definitions into the given bean factory, typically through
 	 * delegating to one or more bean definition readers.
 	 * @param beanFactory the bean factory to load bean definitions into

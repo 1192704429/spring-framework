@@ -85,6 +85,7 @@ public class GroovyWebApplicationContext extends AbstractRefreshableWebApplicati
 
 
 	/**
+	 * 通过 GroovyBeanDefinitionReader 加载 bean 定义。
 	 * Loads the bean definitions via an GroovyBeanDefinitionReader.
 	 * @see org.springframework.beans.factory.groovy.GroovyBeanDefinitionReader
 	 * @see #initBeanDefinitionReader

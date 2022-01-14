@@ -173,6 +173,18 @@ public class AnnotationConfigWebApplicationContext extends AbstractRefreshableWe
 
 
 	/**
+	 * 为 {@link register(Class...)} 指定的任何类注册一个
+	 * {@link org.springframework.beans.factory.config.BeanDefinition}
+	 * 并扫描 {@link scan(String...)} 指定的任何包.
+	 * <p>对于由 {@link setConfigLocation(String)} 或
+	 * {@link setConfigLocations(String[])} 指定的任何值，
+	 * 首先尝试将每个位置加载为一个类，如果类加载成功，
+	 * 则注册一个 {@code BeanDefinition} ，
+	 * 并且如果类加载失败（即引发{@code ClassNotFoundException}），
+	 * 则假定该值是一个包并尝试扫描它以查找组件类。
+	 * <p>启用默认的注解配置后处理器集，这样可以使用 {@code @Autowired}、{@code @Required} 和相关的注解。
+	 * <p>除非为构造型注解提供了 {@code value} 属性，否则配置类 bean 定义会使用生成的 bean 定义名称进行注册。
+	 *
 	 * Register a {@link org.springframework.beans.factory.config.BeanDefinition} for
 	 * any classes specified by {@link #register(Class...)} and scan any packages
 	 * specified by {@link #scan(String...)}.
