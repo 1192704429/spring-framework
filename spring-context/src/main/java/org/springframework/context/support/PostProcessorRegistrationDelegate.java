@@ -43,6 +43,7 @@ import org.springframework.core.metrics.StartupStep;
 import org.springframework.lang.Nullable;
 
 /**
+ * AbstractApplicationContext 的后处理器处理的委托。
  * Delegate for AbstractApplicationContext's post-processor handling.
  *
  * @author Juergen Hoeller
@@ -58,6 +59,12 @@ final class PostProcessorRegistrationDelegate {
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
+		/**
+		 * 虽然看起来可以轻松地重构此方法的主体以避免使用多个循环和多个列表，但使用多个列表和多次传递处理器名称是有意的。
+		 * 我们必须确保我们遵守 PriorityOrdered 和 Ordered 处理器的合同。
+		 * 具体来说，我们不能导致处理器被实例化（通过 getBean() 调用）或以错误的顺序在 ApplicationContext 中注册。
+		 * 在提交拉取请求 (PR) 以更改此方法之前，请查看所有涉及 PostProcessorRegistrationDelegate 更改的被拒绝 PR 的列表
+		 */
 		// WARNING: Although it may appear that the body of this method can be easily
 		// refactored to avoid the use of multiple loops and multiple lists, the use
 		// of multiple lists and multiple passes over the names of processors is
@@ -174,7 +181,7 @@ final class PostProcessorRegistrationDelegate {
 			}
 		}
 
-		// First, invoke the BeanFactoryPostProcessors that implement PriorityOrdered.
+		// First, invoke the BeanFactoryPostProcessors that implement PriorityOrdered. 首先，调用实现 PriorityOrdered 的 BeanFactoryPostProcessor
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
 		invokeBeanFactoryPostProcessors(priorityOrderedPostProcessors, beanFactory);
 

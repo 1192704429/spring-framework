@@ -184,6 +184,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/**
 	 * Unique id for this context, if any.
+	 * 创建该容器上下文的唯一标识，在下方createBeanFactory的时候set进去了
 	 */
 	private String id = ObjectUtils.identityToString(this);
 
@@ -206,6 +207,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/**
 	 * BeanFactoryPostProcessors to apply on refresh.
+	 * 创建存储BeanFactoryPostProcessor的集合
 	 */
 	private final List<BeanFactoryPostProcessor> beanFactoryPostProcessors = new ArrayList<>();
 
@@ -215,17 +217,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private long startupDate;
 
 	/**
-	 * Flag that indicates whether this context is currently active.
+	 * Flag that indicates whether this context is currently active. 指示此上下文当前是否处于活动状态的标志。
 	 */
 	private final AtomicBoolean active = new AtomicBoolean();
 
 	/**
-	 * Flag that indicates whether this context has been closed already.
+	 * Flag that indicates whether this context has been closed already. 指示此上下文是否已关闭的标志
 	 */
 	private final AtomicBoolean closed = new AtomicBoolean();
 
 	/**
 	 * Synchronization monitor for the "refresh" and "destroy".
+	 * 在刷新和销毁的时候的监事锁
 	 */
 	private final Object startupShutdownMonitor = new Object();
 
@@ -285,6 +288,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Create a new AbstractApplicationContext with no parent.
 	 */
 	public AbstractApplicationContext() {
+		// 资源文件管理器，用来解析那些xml，配置文件什么的
 		this.resourcePatternResolver = getResourcePatternResolver();
 	}
 
@@ -593,6 +597,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	// Todo spring 源码的核心方法
 	// todo  prepare开头的方法都试准备方法，真正干事的方法都以do开头
+	// 模板模式
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
@@ -615,11 +620,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory(); // obtainFreshBeanFactory是自己类中的方法
 
-			// Prepare the bean factory for use in this context. 准备 bean 工厂以在此上下文中使用。
+			// Prepare the bean factory for use in this context.
+			// 准备 bean 工厂以在此上下文中使用。
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses. 允许在上下文子类中对 bean 工厂进行后处理。
+				// 定义好的模板方法，以后方面自己定义实现
 				postProcessBeanFactory(beanFactory);
 
 				StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
@@ -631,13 +638,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				registerBeanPostProcessors(beanFactory);
 				beanPostProcess.end();
 
-				// Initialize message source for this context. 为此上下文初始化消息源。
+				// Initialize message source for this context. 为此上下文初始化消息源。  i18n国际化
 				initMessageSource();
 
 				// Initialize event multicaster for this context. 为此上下文初始化事件多播器
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses. 初始化特定上下文子类中的其他特殊 bean
+				// 模板方法，留给子类实现，springboot的内置tomcat就是在这个方法实现的
 				onRefresh();
 
 				// Check for listener beans and register them. 检查侦听器 bean 并注册它们。
@@ -696,6 +704,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Validate that all properties marked as required are resolvable: 验证所有标记为必需的属性都是可解析的：
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		// 校验环境对象中的必填属性
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners... 存储预刷新 ApplicationListeners...
@@ -751,6 +760,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
+		// 设置忽略的aware接口以及实现  aware接口是用来获得系统资源
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
@@ -806,6 +816,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 * 实例化并调用所有注册的 BeanFactoryPostProcessor bean，
+	 * 如果给定，则尊重明确的顺序
+	 * 必须在单例实例化之前调用。 实例化之后在修改就没有什么意义了
 	 * Instantiate and invoke all registered BeanFactoryPostProcessor beans,
 	 * respecting explicit order if given.
 	 * <p>Must be called before singleton instantiation.

@@ -65,6 +65,15 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 
 
 	/**
+	 * 为给定的 bean 工厂创建一个新的 AbstractBeanDefinitionReader。
+	 * <p>如果传入的 bean factory 不仅实现了 BeanDefinitionRegistry 接口，还实现了 ResourceLoader 接口，它也会被用作默认的 ResourceLoader。
+	 * 这通常是 {@link org.springframework.context.ApplicationContext} 实现的情况。
+	 * <p>如果给定一个普通的 BeanDefinitionRegistry，默认的 ResourceLoader 将是一个
+	 * {@link org.springframework.core.io.support.PathMatchingResourcePatternResolver}。
+	 * <p>如果传入的 bean 工厂也实现了 {@link EnvironmentCapable}，则此阅读器将使用其环境。否则，阅读器将初始化并使用
+	 * {@link StandardEnvironment}。所有的 ApplicationContext 实现都是 EnvironmentCapable，而普通的 BeanFactory 实现不是。
+	 * @param 以 BeanDefinitionRegistry 的形式注册要加载 bean 定义的 BeanFactory
+	 *
 	 * Create a new AbstractBeanDefinitionReader for the given bean factory.
 	 * <p>If the passed-in bean factory does not only implement the BeanDefinitionRegistry
 	 * interface but also the ResourceLoader interface, it will be used as default

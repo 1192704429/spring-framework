@@ -163,6 +163,8 @@ public class PropertyPlaceholderHelper {
 					}
 				}
 				if (propVal != null) {
+					// 递归调用，解析包含在先前解析的占位符值中的占位符。
+					// Todo 也就是说可以解析${aaa${bbb}}这样的表达式
 					// Recursive invocation, parsing placeholders contained in the
 					// previously resolved placeholder value.
 					propVal = parseStringValue(propVal, placeholderResolver, visitedPlaceholders);

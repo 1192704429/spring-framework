@@ -44,7 +44,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
  */
 public abstract class AbstractXmlApplicationContext extends AbstractRefreshableConfigApplicationContext {
-
+	/** 设置xml文件验证的标识 */
 	private boolean validating = true;
 
 
@@ -80,12 +80,14 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	@Override
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
 		// Create a new XmlBeanDefinitionReader for the given BeanFactory. 为给定的 BeanFactory 创建一个新的 XmlBeanDefinitionReader。
+		// todo 适配器模式
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
 
 		// Configure the bean definition reader with this context's 使用此上下文的配置 bean 定义阅读器
 		// resource loading environment. 资源加载环境。
 		beanDefinitionReader.setEnvironment(this.getEnvironment());
 		beanDefinitionReader.setResourceLoader(this);
+		// 设置一个xml标准解析器，实现EntityResolver接口的类，用来加载本地的dtd，xsd等文件，该文件定义了xml的格式，从而完成相关的解析工作
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 
 		// Allow a subclass to provide custom initialization of the reader, 允许子类提供阅读器的自定义初始化，
@@ -124,6 +126,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 		if (configResources != null) {
 			reader.loadBeanDefinitions(configResources);
 		}
+		// 父类中的 configLocations属性 在ClassPathApplicationContext 的构造方法中设置的
 		String[] configLocations = getConfigLocations();
 		if (configLocations != null) {
 			reader.loadBeanDefinitions(configLocations);
