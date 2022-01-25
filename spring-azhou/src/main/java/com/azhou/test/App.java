@@ -15,9 +15,7 @@ public class App {
 //		applicationContext.register(UserConfig.class);
 //		applicationContext.refresh();
 		// https://www.cnblogs.com/ashleyboy/p/9662119.html
-		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(UserConfig.class);
-		User user = (User) applicationContext.getBean("user");
-		System.out.println(user);
+
 	}
 
 }

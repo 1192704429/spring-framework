@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:azhou="http://www.azhou.cloud/schema/azhou"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.azhou.cloud/schema/azhou http://www.azhou.cloud/schema/user.xsd">
+
+	<azhou:user id="111" userName="azhouyayaya" nickName="shuaizhou" passWord="123456"></azhou:user>
 
 	<bean id="student" class="com.azhou.entity.Student">
 		<property name="name" value="azhouYayaya"/>

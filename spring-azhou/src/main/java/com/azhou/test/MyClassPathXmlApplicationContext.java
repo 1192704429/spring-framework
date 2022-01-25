@@ -12,6 +12,7 @@ public class MyClassPathXmlApplicationContext extends ClassPathXmlApplicationCon
 
 	public MyClassPathXmlApplicationContext(String... args) {
 		super(args);
+		System.out.println(super.getStartupDate());
 	}
 
 	@Override
