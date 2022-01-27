@@ -1,6 +1,7 @@
 package com.azhou.test;
 
 import com.azhou.entity.Student;
+import com.azhou.selfediter.Customer;
 import com.azhou.selftag.User;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -13,10 +14,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class XmlTest {
 
 	public static void main(String[] args) {
-		ApplicationContext ap = new MyClassPathXmlApplicationContext("test.xml");
-		Student bean = ap.getBean(Student.class);
-		User user = ap.getBean(User.class);
-		System.out.println(user);
+//		ApplicationContext ap = new MyClassPathXmlApplicationContext("selfEditor.xml");
+//		Customer customer = ap.getBean(Customer.class);
+//		System.out.println(customer);
+				ApplicationContext ap = new MyClassPathXmlApplicationContext("test.xml");
+
 	}
 
 }

@@ -82,9 +82,10 @@ public class OrderComparator implements Comparator<Object> {
 		else if (p2 && !p1) {
 			return 1;
 		}
-
+		// 如果 o1 o2都没有实现PriorityOrdered 接口  则去拿到order的值
 		int i1 = getOrder(o1, sourceProvider);
 		int i2 = getOrder(o2, sourceProvider);
+		// 值越小 优先级越低
 		return Integer.compare(i1, i2);
 	}
 

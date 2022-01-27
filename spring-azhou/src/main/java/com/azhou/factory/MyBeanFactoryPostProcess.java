@@ -14,7 +14,7 @@ public class MyBeanFactoryPostProcess implements BeanFactoryPostProcessor {
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 //		Object student = beanFactory.getBean("student");
 //		System.out.println(student);
-		System.out.println("1111");
+		System.out.println("============================");
 
 	}
 }

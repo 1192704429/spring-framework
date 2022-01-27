@@ -1,5 +1,8 @@
 package com.azhou.test;
 
+import com.azhou.factory.MyBeanFactoryPostProcess;
+import com.azhou.factory.MyBeanFactoryPostProcess1;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -24,11 +27,16 @@ public class MyClassPathXmlApplicationContext extends ClassPathXmlApplicationCon
 
 	@Override
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
+		super.addBeanFactoryPostProcessor(new MyBeanFactoryPostProcess());
+		super.addBeanFactoryPostProcessor(new MyBeanFactoryPostProcess1());
+
 		beanFactory.setAllowBeanDefinitionOverriding(false);
 		beanFactory.setAllowCircularReferences(false);
 		super.customizeBeanFactory(beanFactory);
 	}
 
-
-
+	@Override
+	protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+		super.postProcessBeanFactory(beanFactory);
+	}
 }
